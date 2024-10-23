@@ -2,9 +2,10 @@ import React, { MouseEventHandler, ReactNode, useState } from "react";
 import { useComponentConfigStore } from "../../stores/component-config";
 import { useComponetsStore, Component } from "../../stores/components";
 import HoverMask from "../HoverMask";
+import SelectedMask from "../SelectedMask";
 
 export default function EditArea() {
-  const { components } = useComponetsStore();
+  const { components, curComponentId, setCurComponentId } = useComponetsStore();
   const { componentConfig } = useComponentConfigStore();
 
   function renderComponent(components: Component[]): ReactNode {
@@ -34,11 +35,25 @@ export default function EditArea() {
 
     for (let i = 0; i < path.length; i++) {
       const ele = path[i] as HTMLElement;
-
       const componentId = ele.dataset.componentId;
 
       if (componentId) {
         setHoverComponentId(+componentId);
+        return;
+      }
+    }
+  };
+
+  const handleClick: MouseEventHandler = (e) => {
+    const path = e.nativeEvent.composedPath();
+
+    for (let i = 0; i < path.length; i++) {
+      const ele = path[i] as HTMLElement;
+
+      const componentId = ele.dataset.componentId;
+
+      if (componentId) {
+        setCurComponentId(+componentId);
         return;
       }
     }
@@ -49,13 +64,21 @@ export default function EditArea() {
       className="h-[100%] edit-area"
       onMouseOver={handleMouseOver}
       onMouseLeave={() => setHoverComponentId(undefined)}
+      onClick={handleClick}
     >
       {renderComponent(components)}
-      {hoverComponentId && (
+      {hoverComponentId && hoverComponentId !== curComponentId && (
         <HoverMask
           portalWrapperClassName="potal-wrapper"
           containerClassName="edit-area"
           componentId={hoverComponentId}
+        />
+      )}
+      {curComponentId && (
+        <SelectedMask
+          portalWrapperClassName="potal-wrapper"
+          containerClassName="edit-area"
+          componentId={curComponentId}
         />
       )}
       <div className="potal-wrapper"></div>

@@ -6,13 +6,17 @@ export default function Material() {
   const { componentConfig } = useComponentConfigStore();
 
   const components = useMemo(() => {
-    return Object.values(componentConfig);
+    return Object.values(componentConfig).filter(
+      (item) => item.name !== "Page"
+    );
   }, [componentConfig]);
 
   return (
     <div>
       {components.map((item, index) => {
-        return <Item name={item.name} key={item.name + index} />;
+        return (
+          <Item name={item.name} desc={item.desc} key={item.name + index} />
+        );
       })}
     </div>
   );

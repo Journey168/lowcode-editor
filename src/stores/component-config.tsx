@@ -12,6 +12,10 @@ export interface ComponentSetter {
   type: string; // 表单类型
   [key: string]: any;
 }
+export interface ComponentEvent {
+  name: string; // 字段名
+  label: string; // 字段名的文案
+}
 
 export interface ComponentConfig {
   name: string;
@@ -19,6 +23,7 @@ export interface ComponentConfig {
   defaultProps: Record<string, any>;
   setter?: ComponentSetter[];
   stylesSetter?: ComponentSetter[];
+  events?: ComponentEvent[];
   // component: any;
   dev: any;
   prod: any;
@@ -81,6 +86,16 @@ export const useComponentConfigStore = create<State & Action>((set) => ({
           name: "height",
           label: "高度",
           type: "inputNumber",
+        },
+      ],
+      events: [
+        {
+          name: "onClick",
+          label: "点击事件",
+        },
+        {
+          name: "onDoubleClick",
+          label: "双击事件",
         },
       ],
       dev: ButtonDev,

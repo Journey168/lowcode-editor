@@ -1,9 +1,9 @@
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
 import Header from "../components/Header";
-import Material from "../components/Material";
 import EditArea from "../components/EditArea";
 import Setting from "../components/Setting";
+import MaterialWrapper from "../components/MaterialWrapper";
 
 export default function Editor() {
   return (
@@ -13,7 +13,7 @@ export default function Editor() {
       </div>
       <Allotment>
         <Allotment.Pane preferredSize={240} maxSize={300} minSize={200}>
-          <Material />
+          <MaterialWrapper />
         </Allotment.Pane>
         <Allotment.Pane>
           <EditArea />

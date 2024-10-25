@@ -22,6 +22,7 @@ export default function EditArea() {
           name: component.name,
           ...config.defaultProps,
           ...component.props,
+          styles: component.styles
         },
         renderComponent(component.children || [])
       );

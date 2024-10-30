@@ -1,5 +1,5 @@
 import { Input, Select } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useComponetsStore } from "../../../stores/components";
 
 export interface ShowMessageConfig {
@@ -12,16 +12,24 @@ export interface ShowMessageConfig {
 
 export interface ShowMessageProps {
   value?: ShowMessageConfig["config"];
+  defaultValue?: ShowMessageConfig["config"];
   onChange?: (config: ShowMessageConfig) => void;
 }
 
 export default function ShowMessage(props: ShowMessageProps) {
-  const { value, onChange } = props;
+  const { value: val, defaultValue, onChange } = props;
   const [type, setType] = useState<"success" | "error">(
-    value?.type || "success"
+    defaultValue?.type || "success"
   );
-  const [text, setText] = useState<string>(value?.text || "");
+  const [text, setText] = useState<string>(defaultValue?.text || "");
   const { curComponentId } = useComponetsStore();
+
+  useEffect(() => {
+    if (val) {
+      setType(val.type);
+      setText(val.text);
+    }
+  }, [val]);
 
   // 消息类型更新
   function messageTypeChange(value: "success" | "error") {
@@ -36,16 +44,6 @@ export default function ShowMessage(props: ShowMessageProps) {
         text,
       },
     });
-
-    // updateComponentProps(curComponentId, {
-    //   [eventName]: {
-    //     ...curComponent?.props?.[eventName],
-    //     config: {
-    //       ...curComponent?.props?.[eventName].config,
-    //       type: value,
-    //     },
-    //   },
-    // });
   }
   // 文本改变更新
   function messageTextChange(value: string) {
@@ -60,15 +58,6 @@ export default function ShowMessage(props: ShowMessageProps) {
         text: value,
       },
     });
-    // updateComponentProps(curComponentId, {
-    //   [eventName]: {
-    //     ...curComponent?.props?.[eventName],
-    //     config: {
-    //       ...curComponent?.props?.[eventName]?.config,
-    //       text: value,
-    //     },
-    //   },
-    // });
   }
 
   return (

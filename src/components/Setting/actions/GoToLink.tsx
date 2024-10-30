@@ -1,5 +1,5 @@
 import { Input } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useComponetsStore } from "../../../stores/components";
 
 export interface GoToLinkConfig {
@@ -8,14 +8,19 @@ export interface GoToLinkConfig {
 }
 
 export interface GoToLinkProps {
+  value?: string;
   defaultValue?: string;
   onChange?: (config: GoToLinkConfig) => void;
 }
 
 export default function GoToLink(props: GoToLinkProps) {
-  const { defaultValue, onChange } = props;
+  const { value: val, defaultValue, onChange } = props;
   const { curComponentId } = useComponetsStore();
   const [value, setValue] = useState(defaultValue);
+
+  useEffect(() => {
+    setValue(val);
+  }, [val]);
 
   // 设置对应事件的跳转路径
   function urlChange(value: string) {

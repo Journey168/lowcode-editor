@@ -3,11 +3,12 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import type { ComponentEvent } from "../../stores/component-config";
 import { useComponentConfigStore } from "../../stores/component-config";
-import { useComponetsStore } from "../../stores/components";
+import { getComponentById, useComponetsStore } from "../../stores/components";
 import ActionModal, { ActionConfig } from "../Setting/ActionModal";
 
 export default function ComponentEvent() {
-  const { curComponent, updateComponentProps } = useComponetsStore();
+  const { curComponent, updateComponentProps, components } =
+    useComponetsStore();
   const { componentConfig } = useComponentConfigStore();
 
   const [actionModalOpen, setActionModalOpen] = useState<boolean>(false);
@@ -121,6 +122,36 @@ export default function ComponentEvent() {
                   {item.type === "customJS" ? (
                     <div className="border border-[#aaa] m-[10px] p-[10px] relative">
                       <div className="text-[blue]">自定义JS</div>
+                      <div
+                        className="absolute top-[10px] right-[30px] cursor-pointer"
+                        onClick={() => editAction(item, index)}
+                      >
+                        <EditOutlined />
+                      </div>
+                      <Popconfirm
+                        title="确认删除？"
+                        okText={"确认"}
+                        cancelText={"取消"}
+                        onConfirm={() => deleteAction(event, index)}
+                      >
+                        <div className="absolute top-[10px] right-[10px] cursor-pointer">
+                          <DeleteOutlined />
+                        </div>
+                      </Popconfirm>
+                    </div>
+                  ) : null}
+                  {/* 组件方法 */}
+                  {item.type === "componentMethod" ? (
+                    <div className="border border-[#aaa] m-[10px] p-[10px] relative">
+                      <div className="text-[blue]">组件方法</div>
+                      <div>
+                        {
+                          getComponentById(item.config.componentId, components)
+                            ?.desc
+                        }
+                      </div>
+                      <div>{item.config.componentId}</div>
+                      <div>{item.config.method}</div>
                       <div
                         className="absolute top-[10px] right-[30px] cursor-pointer"
                         onClick={() => editAction(item, index)}

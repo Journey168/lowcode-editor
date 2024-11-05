@@ -1,10 +1,17 @@
 import { Modal, Segmented } from "antd";
 import { useEffect, useState } from "react";
+import ComponentMethod, {
+  ComponentMethodConfig,
+} from "./actions/ComponentMethod";
 import CustomJS, { CustomJSConfig } from "./actions/CustomJS";
 import GoToLink, { GoToLinkConfig } from "./actions/GoToLink";
 import ShowMessage, { ShowMessageConfig } from "./actions/ShowMessage";
 
-export type ActionConfig = GoToLinkConfig | ShowMessageConfig | CustomJSConfig;
+export type ActionConfig =
+  | GoToLinkConfig
+  | ShowMessageConfig
+  | CustomJSConfig
+  | ComponentMethodConfig;
 
 interface ActionModalProps {
   visible: boolean;
@@ -44,6 +51,7 @@ export default function ActionModal(props: ActionModalProps) {
           options={[
             { label: "访问链接", value: "goToLink" },
             { label: "消息提示", value: "showMessage" },
+            { label: "组件方法", value: "componentMethod" },
             { label: "自定义JS", value: "customJS" },
           ]}
         />
@@ -58,6 +66,16 @@ export default function ActionModal(props: ActionModalProps) {
         {key === "showMessage" && (
           <ShowMessage
             value={action?.type === "showMessage" ? action.config : undefined}
+            onChange={(config) => {
+              setCurConfig(config);
+            }}
+          />
+        )}
+        {key === "componentMethod" && (
+          <ComponentMethod
+            value={
+              action?.type === "componentMethod" ? action.config : undefined
+            }
             onChange={(config) => {
               setCurConfig(config);
             }}

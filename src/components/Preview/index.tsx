@@ -1,5 +1,5 @@
 import { message } from "antd";
-import React from "react";
+import React, { useRef } from "react";
 import { useComponentConfigStore } from "../../stores/component-config";
 import { useComponetsStore, Component } from "../../stores/components";
 import { ActionConfig } from "../Setting/ActionModal";
@@ -7,6 +7,7 @@ import { ActionConfig } from "../Setting/ActionModal";
 export default function Preview() {
   const { components } = useComponetsStore();
   const { componentConfig } = useComponentConfigStore();
+  const componentRefs = useRef<Record<string, any>>({});
 
   // 事件类型添加处理
   function hangleEvent(component: Component) {
@@ -35,6 +36,13 @@ export default function Preview() {
                   message.success(content);
                 },
               });
+            } else if (action.type === "componentMethod") {
+              const component =
+                componentRefs.current[action.config.componentId];
+
+              if (component) {
+                component[action.config.method]?.();
+              }
             }
           });
         };
@@ -56,6 +64,9 @@ export default function Preview() {
           id: component.id,
           name: component.name,
           style: component.styles,
+          ref: (ref: Record<string, any>) => {
+            componentRefs.current[component.id] = ref;
+          },
           ...config.defaultProps,
           ...component.props,
           ...hangleEvent(component),
